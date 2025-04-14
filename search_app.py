@@ -85,13 +85,11 @@ if user_input:
                         self.cell(0, 10, f"Page {self.page_no()}", align="C")
 
                     def add_data(self, table_data):
-        # English only table
         self.set_font("DejaVu", "", 12)
         self.ln(10)
         self.set_fill_color(230, 230, 230)
         self.cell(40, 10, "Code", 1, 0, "C", True)
         self.cell(140, 10, "English", 1, 1, "C", True)
-
         for row in table_data:
             self.cell(40, 10, str(row["Code"]), 1)
             self.cell(140, 10, str(row["English"]), 1, 1)
@@ -101,12 +99,12 @@ if user_input:
                         self.set_fill_color(230, 230, 230)
                         self.cell(40, 10, "Code", 1, 0, "C", True)
                         self.cell(75, 10, "English", 1, 0, "C", True)
-                        
+                        self.cell(75, 10, "Arabic", 1, 1, "C", True)
 
                         for row in table_data:
                             self.cell(40, 10, str(row["Code"]), 1)
                             self.cell(75, 10, str(row["English"]), 1)
-                            
+                            self.cell(75, 10, str(row["Arabic"]), 1, 1)
 
                 pdf = PDF()
                 pdf.add_page()
