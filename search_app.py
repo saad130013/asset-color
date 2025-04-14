@@ -7,7 +7,7 @@ from fpdf import FPDF
 import io
 
 st.set_page_config(page_title="🔍 Smart Asset Lookup", layout="centered", page_icon="🔍")
-st.title("🔍 Smart Asset Description Autocomplete with PDF Export (Arabic + English)")
+st.title("🔍 Asset Classifier with Arabic-English Matching")
 
 @st.cache_data
 def load_data():
@@ -27,15 +27,23 @@ def create_vectorizer():
 
 vectorizer, description_vectors = create_vectorizer()
 
-user_input = st.text_input("✍️ Start typing asset description:")
+user_input = st.text_input("✍️ Start typing asset description (e.g. جهاز، طابعة، مكيف):")
 
 if user_input:
     user_vec = vectorizer.transform([user_input])
     similarities = cosine_similarity(user_vec, description_vectors).flatten()
-    top_indices = similarities.argsort()[-5:][::-1]
 
-    suggestions = [descriptions[i] for i in top_indices]
-    selected_suggestion = st.selectbox("💡 Suggestions:", suggestions)
+    # نتائج TF-IDF (أفضل 10)
+    tfidf_indices = similarities.argsort()[-10:][::-1]
+    tfidf_suggestions = [descriptions[i] for i in tfidf_indices]
+
+    # نتائج تطابق جزئي
+    partial_matches = [desc for desc in descriptions if user_input in desc]
+
+    # دمج النتائج وإزالة التكرارات
+    combined_results = list(dict.fromkeys(partial_matches + tfidf_suggestions))
+
+    selected_suggestion = st.selectbox("💡 Suggestions:", combined_results)
 
     if selected_suggestion:
         st.markdown("### 🧾 Selected Description:")
@@ -43,10 +51,7 @@ if user_input:
 
         selected_row = df[df["Asset Description"] == selected_suggestion].iloc[0]
 
-        with st.expander("📊 Classification Details"):
-            st.markdown("### 🔄 Accounting Classification Matrix")
-
-            # جدول التصنيف المزدوج
+        with st.expander("📊 Classification Matrix"):
             mapping = [
                 ("Level 1 FA Module Code", "Level 1 FA Module - English Description", "Level 1 FA Module - Arabic Description"),
                 ("Level 2 FA Module Code", "Level 2 FA Module - English Description", "Level 2 FA Module - Arabic Description"),
