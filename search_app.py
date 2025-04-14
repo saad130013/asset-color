@@ -93,7 +93,7 @@ if user_input:
         for row in table_data:
             self.cell(40, 10, str(row["Code"]), 1)
             self.cell(140, 10, str(row["English"]), 1, 1)
-
+    
                         self.set_font("DejaVu", "", 12)
                         self.ln(10)
                         self.set_fill_color(230, 230, 230)
