@@ -72,12 +72,11 @@ if user_input:
                 pdf.add_page()
                 pdf.add_data(table_data)
 
-                buffer = io.BytesIO()
-                pdf.output(buffer)
+                pdf_bytes = pdf.output(dest="S").encode("latin1")
 
                 st.download_button(
                     label="Download PDF",
-                    data=buffer.getvalue(),
+                    data=pdf_bytes,
                     file_name="asset_report.pdf",
                     mime="application/pdf"
                 )
