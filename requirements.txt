@@ -1,2 +1,1 @@
 fpdf
-deep-translator
