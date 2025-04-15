@@ -1,4 +1,3 @@
-streamlit
-pandas
-openpyxl
-fpdf
+fpdf==1.7.2
+arabic_reshaper
+python-bidi
